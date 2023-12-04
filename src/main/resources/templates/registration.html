@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: purple;
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+        .content-wrapper {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            margin: 0 auto;
+        }
+        .error-message {
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid content-wrapper">
+    <h2 class="mb-4">Registration Form</h2>
+    <form th:action="@{/registration}" th:object="${customer}" method="post" class="needs-validation" novalidate>
+
+        <!-- Email Address -->
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" th:field="*{emailAddress}" required>
+            <span class="error-message" id="email-required">Email is required</span>
+            <span class="error-message" id="email-invalid">Invalid email address</span>
+        </div>
+
+        <!-- Title -->
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" th:field="*{title}" required>
+            <span class="error-message">Title is required</span>
+        </div>
+
+        <!-- First Name -->
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
+            <span class="error-message">First name is required</span>
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
+            <span class="error-message">Last name is required</span>
+        </div>
+
+        <!-- Address Line 1 -->
+        <div class="form-group">
+            <label for="addressLine1">Address Line 1:</label>
+            <input type="text" class="form-control" id="addressLine1" th:field="*{addressLine1}" required>
+            <span class="error-message">Address Line 1 is required</span>
+        </div>
+
+        <!-- Address Line 2 (Optional) -->
+        <div class="form-group">
+            <label for="addressLine2">Address Line 2:</label>
+            <input type="text" class="form-control" id="addressLine2" th:field="*{addressLine2}">
+        </div>
+
+        <!-- City (Optional) -->
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" class="form-control" id="city" th:field="*{city}">
+        </div>
+
+        <!-- Postcode -->
+        <div class="form-group">
+            <label for="postcode">Postcode:</label>
+            <input type="text" class="form-control" id="postcode" th:field="*{postcode}" required>
+            <span class="error-message">Postcode is required</span>
+        </div>
+
+        <!-- Phone Number (Optional) -->
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" class="form-control" id="phoneNumber" th:field="*{phoneNumber}">
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="submit-button" disabled>Register</button>
+        </div>
+
+
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('.needs-validation');
+    const submitButton = document.getElementById('submit-button');
+    const inputs = form.querySelectorAll('.form-control');
+
+    function updateButtonState() {
+        let formIsValid = true;
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                formIsValid = false;
+            }
+        });
+
+        submitButton.disabled = !formIsValid;
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            var errorMessageRequired = this.nextElementSibling;
+            var errorMessageInvalid = errorMessageRequired.nextElementSibling;
+
+            if (this.validity.valueMissing) {
+                errorMessageRequired.style.display = 'block';
+                errorMessageInvalid.style.display = 'none';
+            } else if (this.validity.typeMismatch && this.type === "email") {
+                errorMessageRequired.style.display = 'none';
+                errorMessageInvalid.style.display = 'block';
+            } else {
+                errorMessageRequired.style.display = 'none';
+                errorMessageInvalid.style.display = 'none';
+            }
+
+            updateButtonState();
+        });
+    });
+
+    form.addEventListener('submit', function (event) {
+        if (!this.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        this.classList.add('was-validated');
+    }, false);
+});
+
+</script>
+</body>
+</html>
